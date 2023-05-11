@@ -7,6 +7,12 @@ Add-Type -AssemblyName System.Windows.Forms
 # Cria uma instância da classe Log
 $log = [Log]::new()
 
+# Carrega a classe ProgramInstaller
+. "$PSScriptRoot\ProgramInstaller.ps1"
+
+# Cria uma instância da classe ProgramInstaller
+$programInstaller = [ProgramInstaller]::new()
+
 # Cria uma janela
 $Form = New-Object System.Windows.Forms.Form
 $Form.Text = "Programa PowerShell"
@@ -74,39 +80,14 @@ $ButtonInstall.Add_Click({
         # Coloque aqui o código para a ação do botão 1
         Write-Host "Browser"
 
-        # Caminho para o instalador do programa
+    # Define o caminho do instalador do programa
     $installerPath = "C:\TEMP\formatacao\arquivos\ChromeStandaloneSetup64.exe"
 
-    # Verifica se o instalador existe
-    if (Test-Path $installerPath) {
-        # Executa o instalador do programa
-        Start-Process -FilePath $installerPath -Wait
+    # Exemplo de instalação do Programa 1
+    $programInstaller.InstallProgramNoMSI($installerPath)
 
-        # Exibe uma mensagem de confirmação
-        [System.Windows.Forms.MessageBox]::Show("Processo finalizado!")
-        
-     # Obtém a data e hora atual
-    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-
-    # Mensagem do log
-    $logMessage = "Ação realizada em ${timestamp}: Processo de instalação do $installerPath finalizado ou cancelado."
-
-    # Salva o log no arquivo
-    $logMessage | Out-File -FilePath $logPath -Append
-
-    } else {
-        # Exibe uma mensagem de erro se o instalador não for encontrado
-        [System.Windows.Forms.MessageBox]::Show("O instalador $installerPath não foi encontrado.")
-
-     # Obtém a data e hora atual
-    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-
-    # Mensagem do log
-    $logMessage = "Ação realizada em ${timestamp}: O instalador $installerPath não foi encontrado."
-
-    # Salva o log no arquivo
-    $logMessage | Out-File -FilePath $logPath -Append
-    }
+    # Exemplo de gravação de log
+    $log.WriteLog("$installerPath instalado com sucesso.")
 
     })
 
@@ -121,39 +102,7 @@ $ButtonInstall.Add_Click({
         # Coloque aqui o código para a ação do botão 2
         Write-Host "Compactador"
 
-                # Caminho para o instalador do programa
-    $installerPath = "C:\TEMP\formatacao\arquivos\7z2201-x64.exe"
 
-    # Verifica se o instalador existe
-    if (Test-Path $installerPath) {
-        # Executa o instalador do programa
-        Start-Process -FilePath $installerPath -Wait
-
-        # Exibe uma mensagem de confirmação
-        [System.Windows.Forms.MessageBox]::Show("Processo finalizado!")
-        
-     # Obtém a data e hora atual
-    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-
-    # Mensagem do log
-    $logMessage = "Ação realizada em ${timestamp}: Processo de instalação do $installerPath finalizado ou cancelado."
-
-    # Salva o log no arquivo
-    $logMessage | Out-File -FilePath $logPath -Append
-
-    } else {
-        # Exibe uma mensagem de erro se o instalador não for encontrado
-        [System.Windows.Forms.MessageBox]::Show("O instalador $installerPath não foi encontrado.")
-
-     # Obtém a data e hora atual
-    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-
-    # Mensagem do log
-    $logMessage = "Ação realizada em ${timestamp}: O instalador $installerPath não foi encontrado."
-
-    # Salva o log no arquivo
-    $logMessage | Out-File -FilePath $logPath -Append
-    }
 
     })
 
