@@ -1,6 +1,12 @@
 ﻿# Importa a biblioteca necessária para criar a interface gráfica
 Add-Type -AssemblyName System.Windows.Forms
 
+# Carrega a classe Log
+. "$PSScriptRoot\Log.ps1"
+
+# Cria uma instância da classe Log
+$log = [Log]::new()
+
 # Cria uma janela
 $Form = New-Object System.Windows.Forms.Form
 $Form.Text = "Programa PowerShell"
@@ -22,13 +28,9 @@ $ButtonInstall.Text = "Instalar Arquivos"
 $Form.Controls.Add($ButtonCopy)
 $Form.Controls.Add($ButtonInstall)
 
- # Caminho para o arquivo de log
-    $logPath = "C:\temp\formatacao\log.txt"
-
-# Verifica se o arquivo de log existe, caso contrário, cria-o
-if (-not (Test-Path $logPath)) {
-        $null = New-Item -Path $logPath -ItemType File
-    }
+ # Define o caminho de origem e destino do arquivo
+ $origem = "\\e0211\Arquivos\Formatação\"
+ $destino = "C:\temp\formatacao\arquivos\"
 
 # Cria uma ação para o botão Copiar Arquivos
 $ButtonCopy.Add_Click({
@@ -44,24 +46,13 @@ $ButtonCopy.Add_Click({
 
     Write-Host "Copiando arquivos..."
 
-     # Define o caminho de origem e destino do arquivo
-    $origem = "\\e0211\Arquivos\Formatação\"
-    $destino = "C:\temp\formatacao\arquivos\"
-
      # Copia o arquivo
     Copy-Item -Path $origem -Destination $destino -Recurse -Force
 
     # Exibe uma mensagem de sucesso
     Write-Host "Arquivo copiado com sucesso."
 
-    # Obtém a data e hora atual
-    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-
-    # Mensagem do log
-    $logMessage = "Ação realizada em ${timestamp}: Arquivos copiados de $origem para $destino"
-
-    # Salva o log no arquivo
-    $logMessage | Out-File -FilePath $logPath -Append
+    $log.WriteLog("Arquivos copiados de $origem para $destino")
 
 })
 
