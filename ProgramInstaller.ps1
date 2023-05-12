@@ -6,10 +6,10 @@ class ProgramInstaller {
             Start-Process -FilePath $installerPath -Wait
 
             # Exibe uma mensagem de confirmação
-            [System.Windows.Forms.MessageBox]::Show("Processo finalizado!")
+            [System.Windows.Forms.MessageBox]::Show("Processo finalizado")
         } else {
             # Exibe uma mensagem de erro se o instalador não for encontrado
-            [System.Windows.Forms.MessageBox]::Show("O instalador $installerPath não foi encontrado.")
+            [System.Windows.Forms.MessageBox]::Show("O instalador $installerPath não foi encontrado")
         }
     }
 }

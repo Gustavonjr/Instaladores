@@ -34,9 +34,21 @@ $ButtonInstall.Text = "Instalar Arquivos"
 $Form.Controls.Add($ButtonCopy)
 $Form.Controls.Add($ButtonInstall)
 
+
  # Define o caminho de origem e destino do arquivo
  $origem = "\\e0211\Arquivos\Formatação\"
  $destino = "C:\temp\formatacao\arquivos\"
+
+# Cria uma barra de progresso (loading)
+$ProgressBar = New-Object System.Windows.Forms.ProgressBar
+$ProgressBar.Location = New-Object System.Drawing.Point(50, 100)
+$ProgressBar.Size = New-Object System.Drawing.Size(200, 30)
+$ProgressBar.Style = 'Continuous'
+$ProgressBar.Visible = $false
+
+# Adiciona a barra de progresso à janela
+$Form.Controls.Add($ProgressBar)
+
 
 # Cria uma ação para o botão Copiar Arquivos
 $ButtonCopy.Add_Click({
@@ -48,15 +60,45 @@ $ButtonCopy.Add_Click({
     if (-not (Test-Path -Path "C:\temp\formatacao")) {
         New-Item -ItemType Directory -Path "C:\temp\formatacao" | Out-Null
         Write-Host "Pasta C:\temp\formatacao criada"
+        $log.WriteLog("Pasta C:\temp\formatacao criada")
     }
 
     Write-Host "Copiando arquivos..."
+    
+    # Obtém a lista de arquivos na origem
+    $files = Get-ChildItem -Path $origem -Recurse
 
-     # Copia o arquivo
-    Copy-Item -Path $origem -Destination $destino -Recurse -Force
+    # Inicializa a barra de progresso
+    $progressBar = New-Object System.Windows.Forms.ProgressBar
+    $progressBar.Location = New-Object System.Drawing.Point(50, 150)
+    $progressBar.Size = New-Object System.Drawing.Size(200, 20)
+    $progressBar.Minimum = 0
+    $progressBar.Maximum = $files.Count
+    $progressBar.Value = 0
+
+    # Adiciona a barra de progresso à janela
+    $Form.Controls.Add($progressBar)
+
+    # Copia os arquivos
+    foreach ($file in $files) {
+        $destinationFilePath = $file.FullName.Replace($origem, $destino)
+
+        # Verifica se o arquivo já existe na pasta de destino
+        if (-not (Test-Path -Path $destinationFilePath)) {
+            # Copia o arquivo
+            Copy-Item -Path $file.FullName -Destination $destinationFilePath -Force
+        }
+
+        # Atualiza o valor da barra de progresso
+        $progressBar.Value++
+    }
 
     # Exibe uma mensagem de sucesso
-    Write-Host "Arquivo copiado com sucesso."
+    [System.Windows.Forms.MessageBox]::Show("Arquivos copiados com sucesso.")
+
+    # Remove a barra de progresso da janela
+    $Form.Controls.Remove($progressBar)
+    $progressBar.Dispose()
 
     $log.WriteLog("Arquivos copiados de $origem para $destino")
 
@@ -87,53 +129,93 @@ $ButtonInstall.Add_Click({
     $programInstaller.InstallProgramNoMSI($installerPath)
 
     # Exemplo de gravação de log
-    $log.WriteLog("$installerPath instalado com sucesso.")
+    $log.WriteLog("Instalação do $installerPath cancelada e/ou finalizada com sucesso.")
 
     })
 
-    # Cria o Compactador
+    # Cria o Botão Compactador
     $Button2 = New-Object System.Windows.Forms.Button
-    $Button2.Location = New-Object System.Drawing.Point(10, 40)
+    $Button2.Location = New-Object System.Drawing.Point(10, 50)
     $Button2.Size = New-Object System.Drawing.Size(100, 30)
     $Button2.Text = "Compactador"
 
-    # Adiciona ação para o botão 2
+    # Adiciona ação para o Botão Compactador
     $Button2.Add_Click({
         # Coloque aqui o código para a ação do botão 2
         Write-Host "Compactador"
 
+        # Define o caminho do instalador do programa
+    $installerPath = "C:\TEMP\formatacao\arquivos\7z2201-x64.exe"
+
+    # Exemplo de instalação do Programa 1
+    $programInstaller.InstallProgramNoMSI($installerPath)
+
+    # Exemplo de gravação de log
+    $log.WriteLog("Instalação do $installerPath cancelada e/ou finalizada com sucesso.")
 
 
     })
 
-    # Cria o botão 3
+    # Cria o botão LibreOffice
     $Button3 = New-Object System.Windows.Forms.Button
-    $Button3.Location = New-Object System.Drawing.Point(10, 70)
+    $Button3.Location = New-Object System.Drawing.Point(10, 90)
     $Button3.Size = New-Object System.Drawing.Size(100, 30)
-    $Button3.Text = "Arquivo 3"
+    $Button3.Text = "LibreOffice"
 
-    # Adiciona ação para o botão 3
+    # Adiciona ação para o botão libreOffice
     $Button3.Add_Click({
         # Coloque aqui o código para a ação do botão 3
-        Write-Host "Compactador"
+        Write-Host "LibreOffice"
+
+        # Define o caminho do instalador do programa
+    $installerPath = "C:\TEMP\formatacao\arquivos\LibreOffice_7.4.2_Win_x64.msi"
+
+    # Exemplo de instalação do Programa 1
+    $programInstaller.InstallProgramNoMSI($installerPath)
+
+    # Exemplo de gravação de log
+    $log.WriteLog("Instalação do $installerPath cancelada e/ou finalizada com sucesso.")
+
     })
 
-    # Cria o botão 4
-    $Button3 = New-Object System.Windows.Forms.Button
-    $Button3.Location = New-Object System.Drawing.Point(10, 70)
-    $Button3.Size = New-Object System.Drawing.Size(100, 30)
-    $Button3.Text = "Arquivo 3"
+    # Cria o botão BDE
+    $Button4 = New-Object System.Windows.Forms.Button
+    $Button4.Location = New-Object System.Drawing.Point(10, 130)
+    $Button4.Size = New-Object System.Drawing.Size(100, 30)
+    $Button4.Text = "BDE"
 
-    # Adiciona ação para o botão 3
-    $Button3.Add_Click({
+    # Adiciona ação para o botão bde
+    $Button4.Add_Click({
         # Coloque aqui o código para a ação do botão 3
-        Write-Host "Compactador"
+        Write-Host "BDE"
+
+        # Define o caminho do instalador do programa
+    $installerPath = "C:\TEMP\formatacao\arquivos\VECTOR\bde_vector_64.exe"
+
+    $programInstaller.InstallProgramNoMSI($installerPath)
+
+    $log.WriteLog("Instalação do $installerPath cancelada e/ou finalizada com sucesso.")
+
+    if ((Test-Path -Path "C:\Program Files (x86)\Common Files\Borland Shared\BDE")) {
+
+        # Define o caminho de origem e destino do arquivo
+        $origemBDE_idapi32 = "C:\TEMP\formatacao\arquivos\VECTOR\idapi32.cfg"
+        $origemBDE_sqlora8 = "C:\TEMP\formatacao\arquivos\VECTOR\sqlora8.dll"
+        $destinoBDE = "C:\Program Files (x86)\Common Files\Borland Shared\BDE\"
+
+        Copy-Item -Path $origemBDE_idapi32 -Destination $destinoBDE -Force
+        $log.WriteLog("$origemBDE_idapi32 copiado para $destinoBDE")
+        Copy-Item -Path $origemBDE_sqlora8 -Destination $destinoBDE -Force
+        $log.WriteLog("$origemBDE_sqlora8 copiado para $destinoBDE")
+    }
+
     })
 
     # Adiciona os botões à janela
     $InstallWindow.Controls.Add($Button1)
     $InstallWindow.Controls.Add($Button2)
     $InstallWindow.Controls.Add($Button3)
+    $InstallWindow.Controls.Add($Button4)
 
     # Mostra a janela
     $InstallWindow.ShowDialog()
