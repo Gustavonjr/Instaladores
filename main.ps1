@@ -1,22 +1,33 @@
 ﻿# Importa a biblioteca necessária para criar a interface gráfica
 Add-Type -AssemblyName System.Windows.Forms
-
-# Carrega a classe Log
+. "$PSScriptRoot\Menu.ps1"
+. "$PSScriptRoot\ProgramInstaller.ps1"
 . "$PSScriptRoot\Log.ps1"
+
 
 # Cria uma instância da classe Log
 $log = [Log]::new()
 
 # Carrega a classe ProgramInstaller
-. "$PSScriptRoot\ProgramInstaller.ps1"
+
 
 # Cria uma instância da classe ProgramInstaller
 $programInstaller = [ProgramInstaller]::new()
 
-# Cria uma janela
+# Cria uma janela (main)
 $Form = New-Object System.Windows.Forms.Form
 $Form.Text = "Programa PowerShell"
-$Form.Size = New-Object System.Drawing.Size(300,200)
+$Form.Size = New-Object System.Drawing.Size(300,230)
+
+# Cria uma instância da classe Menu
+$menu = [Menu]::new()
+
+# Chama o método Show() passando a janela principal como parâmetro
+$menu.Show($form)
+
+# Define o caminho de origem e destino do arquivo
+$origem = "\\e0211\Arquivos\Formatação\"
+$destino = "C:\temp\formatacao\arquivos\"
 
 # Cria um botão para copiar arquivos
 $ButtonCopy = New-Object System.Windows.Forms.Button
@@ -35,9 +46,7 @@ $Form.Controls.Add($ButtonCopy)
 $Form.Controls.Add($ButtonInstall)
 
 
- # Define o caminho de origem e destino do arquivo
- $origem = "\\e0211\Arquivos\Formatação\"
- $destino = "C:\temp\formatacao\arquivos\"
+
 
 # Cria uma barra de progresso (loading)
 $ProgressBar = New-Object System.Windows.Forms.ProgressBar
