@@ -13,16 +13,17 @@ class Menu {
         $this.MenuItem1.Text = "Configurações"
         $this.MenuItem1.Add_Click({
             # Coloque aqui o código para a ação do primeiro item do menu
-            Write-Host "Configurações selecionada"
+            . "$PSScriptRoot\config.ps1"
         })
+        
 
         # Cria o segundo item do menu
         $this.MenuItem2 = New-Object System.Windows.Forms.ToolStripMenuItem
         $this.MenuItem2.Text = "Exit"
         $this.MenuItem2.Add_Click({
-            # Coloque aqui o código para a ação do segundo item do menu
-            $form.Close()
-        })
+                # Coloque aqui o código para a ação do segundo item do menu
+                $form.Close()
+            })
 
         # Adiciona os itens ao menu strip
         $this.MenuStrip.Items.AddRange(@($this.MenuItem1, $this.MenuItem2))
