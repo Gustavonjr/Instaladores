@@ -133,8 +133,8 @@ $ButtonInstall.Add_Click({
         $Button1.Add_Click({
 
                 # Define o caminho do instalador do programa
-                $installerPath = "C:\TEMP\formatacao\arquivos\ChromeStandaloneSetup64.exe"
-
+                $installerPath = "C:\TEMP\formatacao\arquivos\Browser\ChromeStandaloneSetup64.exe"
+            
                 # Exemplo de instalação do Programa 1
                 $programInstaller.InstallProgramNoMSI($installerPath)
 
@@ -151,7 +151,7 @@ $ButtonInstall.Add_Click({
         # Adiciona ação para o Botão Compactador
         $Button2.Add_Click({
                 # Define o caminho do instalador do programa
-                $installerPath = "C:\TEMP\formatacao\arquivos\7z2201-x64.exe"
+                $installerPath = "C:\TEMP\formatacao\arquivos\Compactador\7z2201-x64.exe"
 
                 # Exemplo de instalação do Programa 1
                 $programInstaller.InstallProgramNoMSI($installerPath)
@@ -172,7 +172,7 @@ $ButtonInstall.Add_Click({
         $Button3.Add_Click({
 
                 # Define o caminho do instalador do programa
-                $installerPath = "C:\TEMP\formatacao\arquivos\LibreOffice_7.4.2_Win_x64.msi"
+                $installerPath = "C:\TEMP\formatacao\arquivos\LibreOffice\LibreOffice_7.5.3_Win_x86-64.msi"
 
                 # Exemplo de instalação do Programa 1
                 $programInstaller.InstallProgramNoMSI($installerPath)
@@ -192,7 +192,7 @@ $ButtonInstall.Add_Click({
         $Button4.Add_Click({
 
                 # Define o caminho do instalador do programa
-                $installerPath = "C:\TEMP\formatacao\arquivos\VECTOR\bde_vector_64.exe"
+                $installerPath = "C:\TEMP\formatacao\arquivos\BDE\bde_vector_64.exe"
 
                 $programInstaller.InstallProgramNoMSI($installerPath)
 
@@ -201,17 +201,76 @@ $ButtonInstall.Add_Click({
                 if ((Test-Path -Path "C:\Program Files (x86)\Common Files\Borland Shared\BDE")) {
 
                     # Define o caminho de origem e destino dos arquivos de config
-                    $origemBDE_idapi32 = "C:\TEMP\formatacao\arquivos\VECTOR\idapi32.cfg"
-                    $origemBDE_sqlora8 = "C:\TEMP\formatacao\arquivos\VECTOR\sqlora8.dll"
+                    $origemBDE_idapi32 = "C:\TEMP\formatacao\arquivos\BDE\idapi32.cfg"
+                    $origemBDE_sqlora8 = "C:\TEMP\formatacao\arquivos\BDE\sqlora8.dll"
                     $destinoBDE = "C:\Program Files (x86)\Common Files\Borland Shared\BDE\"
 
                     Copy-Item -Path $origemBDE_idapi32 -Destination $destinoBDE -Force
                     $log.WriteLog("$origemBDE_idapi32 copiado para $destinoBDE")
                     Copy-Item -Path $origemBDE_sqlora8 -Destination $destinoBDE -Force
                     $log.WriteLog("$origemBDE_sqlora8 copiado para $destinoBDE")
+                    [System.Windows.Forms.MessageBox]::Show("Realize a conferencia das configurações")
+                    $log.WriteLogVazio("Solicitado conferencia das configurações do BDE")
+                    Invoke-Item -Path "C:\Program Files (x86)\Common Files\Borland Shared\BDE\bdeadmin.exe"
                 }
 
             })
+
+
+        # Cria o botão Oracle11g
+        $Button5 = New-Object System.Windows.Forms.Button
+        $Button5.Location = New-Object System.Drawing.Point(10, 170)
+        $Button5.Size = New-Object System.Drawing.Size(100, 30)
+        $Button5.Text = "Oracle 11g"
+
+        # Adiciona ação para o botão Oracle11g
+        $Button5.Add_Click({
+
+                # Define o caminho do instalador do programa
+                $installerPath = "C:\TEMP\formatacao\arquivos\Oracle 11g\client\setup.exe"
+
+                $programInstaller.InstallProgramNoMSI($installerPath)
+
+                $log.WriteLog("Instalação do $installerPath cancelada e/ou finalizada com sucesso.")
+
+                if ((Test-Path -Path "C:\app\Administrador\product\11.2.0\client_1\network\admin")) {
+
+                    # Define o caminho de origem e destino dos arquivos de config
+                    $origemTNS = "C:\TEMP\formatacao\arquivos\Oracle 11g\Tnsnames.ora"
+                    $destinoTNS = "C:\app\Administrador\product\11.2.0\client_1\network\admin"
+
+                    Copy-Item -Path $origemTNS -Destination $destinoTNS -Force
+                    $log.WriteLog("$origemTNS copiado para $destinoTNS")
+                }
+
+                else {
+                    $log.WriteLog("C:\app\Administrador\product\11.2.0\client_1\network\admin Não encontrado, realize a configuração oracle manualmente.")
+                    [System.Windows.Forms.MessageBox]::Show("C:\app\Administrador\product\11.2.0\client_1\network\admin Não encontrado, realize a configuração oracle(TNS) manualmente.")
+                }
+
+
+            })
+
+        # Cria o botão LibreOffice
+        $Button6 = New-Object System.Windows.Forms.Button
+        $Button6.Location = New-Object System.Drawing.Point(10, 210)
+        $Button6.Size = New-Object System.Drawing.Size(100, 30)
+        $Button6.Text = "Acesso Remoto"
+
+        # Adiciona ação para o botão libreOffice
+        $Button6.Add_Click({
+
+                # Define o caminho do instalador do programa
+                $installerPath = "C:\TEMP\formatacao\arquivos\Acesso remoto\UltraVNC_1_3_81_X64_Setup.exe"
+
+                # Exemplo de instalação do Programa 1
+                $programInstaller.InstallProgramNoMSI($installerPath)
+
+                # Exemplo de gravação de log
+                $log.WriteLog("Instalação do $installerPath cancelada e/ou finalizada com sucesso.")
+
+            })
+
 
         # Cria o botão Excluir arquvios
         $ButtonE = New-Object System.Windows.Forms.Button
@@ -220,9 +279,67 @@ $ButtonInstall.Add_Click({
         $ButtonE.BackColor = [System.Drawing.Color]::FromArgb(120, 0, 0)
         $ButtonE.ForeColor = [System.Drawing.Color]::White
 
-        $ButtonE.Text = "Excluir"
+        $ButtonE.Text = "Excluir Arq."
         $ButtonE.Add_Click({
                 Remove-Item $destino -Recurse -Force
+                $log.WriteLog("Realizado a exclusão recursiva dos arquivo do diretorio $destino")
+            })
+
+        # Cria o botão Excluir arquvios
+        $ButtonD = New-Object System.Windows.Forms.Button
+        $ButtonD.Location = New-Object System.Drawing.Point(140, 50)
+        $ButtonD.Size = New-Object System.Drawing.Size(100, 30)
+        $ButtonD.BackColor = [System.Drawing.Color]::FromArgb(120, 0, 50)
+        $ButtonD.ForeColor = [System.Drawing.Color]::White
+
+        $ButtonD.Text = "Windows Defender"
+        $ButtonD.Add_Click({
+                # Define o caminho do instalador do programa
+                $installerPath = "C:\TEMP\formatacao\arquivos\DefenderControl\dControl\dControl.exe"
+
+                # Exemplo de instalação do Programa 1
+                $programInstaller.InstallProgramNoMSI($installerPath)
+ 
+                # Exemplo de gravação de log
+                $log.WriteLog("Dcontrol")
+            })
+
+        # Cria o botão drivers
+        $ButtonS = New-Object System.Windows.Forms.Button
+        $ButtonS.Location = New-Object System.Drawing.Point(140, 90)
+        $ButtonS.Size = New-Object System.Drawing.Size(100, 30)
+        $ButtonS.BackColor = [System.Drawing.Color]::FromArgb(0, 120, 50)
+        $ButtonS.ForeColor = [System.Drawing.Color]::White
+
+        $ButtonS.Text = "Drivers"
+        $ButtonS.Add_Click({
+                # Define o caminho do instalador do programa
+                $installerPath = "\\10.0.20.20\files\SOFTWARE\NEW\DRIVERs\SDI_RUS\SDI_x64_R2201.exe"
+
+                # Exemplo de instalação do Programa 1
+                $programInstaller.InstallProgramNoMSI($installerPath)
+ 
+                # Exemplo de gravação de log
+                $log.WriteLog("Drivers")
+            })
+
+        # Cria o botão Visual
+        $Buttonv = New-Object System.Windows.Forms.Button
+        $Buttonv.Location = New-Object System.Drawing.Point(140, 130)
+        $Buttonv.Size = New-Object System.Drawing.Size(100, 30)
+        $Buttonv.BackColor = [System.Drawing.Color]::FromArgb(120, 120, 0)
+        $Buttonv.ForeColor = [System.Drawing.Color]::White
+
+        $Buttonv.Text = "Visual C"
+        $Buttonv.Add_Click({
+                # Define o caminho do instalador do programa
+                $installerPath = "C:\TEMP\formatacao\arquivos\VisualC\VisualCppRedist_AIO_x86_x64.exe"
+
+                # Exemplo de instalação do Programa 1
+                $programInstaller.InstallProgramNoMSI($installerPath)
+ 
+                # Exemplo de gravação de log
+                $log.WriteLog("Visual C")
             })
 
         # Adiciona os botões à janela
@@ -230,8 +347,12 @@ $ButtonInstall.Add_Click({
         $InstallWindow.Controls.Add($Button2)
         $InstallWindow.Controls.Add($Button3)
         $InstallWindow.Controls.Add($Button4)
-
+        $InstallWindow.Controls.Add($Button5)
+        $InstallWindow.Controls.Add($Button6)
         $InstallWindow.Controls.Add($ButtonE)
+        $InstallWindow.Controls.Add($ButtonD)
+        $InstallWindow.Controls.Add($ButtonS)
+        $InstallWindow.Controls.Add($Buttonv)
 
         $InstallWindow.ShowDialog()
     })

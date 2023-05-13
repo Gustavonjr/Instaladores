@@ -20,7 +20,6 @@ class Configuracoes {
         }
         
         $configuracoes | Out-File -FilePath $global:txtFilePath
-        Write-Host "Configurações gravadas com sucesso."
     }
     
     [void] SetOrigem([string]$novaOrigem) {
@@ -85,9 +84,9 @@ class Configuracoes {
         $configuracoes.SetOrigem($origemAtualizada)
         $configuracoes.SetDestino($destinoAtualizado)
         $configuracoes.GravarConfiguracoes()
-
-        $form.Close()
         $log.WriteLog("Configurações salvas")
+        $form.Close()
+        
     })
 
     $form.Controls.Add($buttonSalvar)
