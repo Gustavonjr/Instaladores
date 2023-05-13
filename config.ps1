@@ -42,9 +42,9 @@ class Configuracoes {
     
     [void] EditarConfiguracoes() {
     $form = New-Object System.Windows.Forms.Form
-    $form.Text = "Editar Configurações"
+    $form.Text = "Editar Config"
     $form.Size = New-Object System.Drawing.Size(300, 150)
-    $form.FormBorderStyle = "FixedDialog"
+    $form.FormBorderStyle = "Sizable"
     $form.StartPosition = "CenterScreen"
 
     $labelOrigem = New-Object System.Windows.Forms.Label
@@ -76,7 +76,6 @@ class Configuracoes {
     $buttonSalvar.Size = New-Object System.Drawing.Size(80, 30)
     $buttonSalvar.Text = "Salvar"
 
-    # Declare a variável $configuracoes antes de criar o evento Click
     $configuracoes = $this
 
     $buttonSalvar.Add_Click({
@@ -88,15 +87,10 @@ class Configuracoes {
         $configuracoes.GravarConfiguracoes()
 
         $form.Close()
-        $log.WriteLog("Configurações salvas, Origem > $origem || Destino $destino")
+        $log.WriteLog("Configurações salvas")
     })
 
     $form.Controls.Add($buttonSalvar)
-
-    # Atualiza o texto das TextBoxes com os valores do arquivo
-    $textBoxOrigem.Text = $this.GetOrigem()
-    $textBoxDestino.Text = $this.GetDestino()
-
     $form.ShowDialog() | Out-Null
     $form.Dispose()
 }

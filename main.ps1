@@ -4,6 +4,12 @@ Add-Type -AssemblyName System.Windows.Forms
 . "$PSScriptRoot\ProgramInstaller.ps1"
 . "$PSScriptRoot\Log.ps1"
 
+# Cria uma instâncias
+$log = [Log]::new()
+$programInstaller = [ProgramInstaller]::new()
+$menu = [Menu]::new()
+
+
 # Pegar o caminho do arquivo de configuração
 $caminhoArquivo = Join-Path -Path $PSScriptRoot -ChildPath "config.txt"
 
@@ -29,20 +35,11 @@ foreach ($linha in $conteudo) {
     }
 }
 
-# Cria uma instância da classe Log
-$log = [Log]::new()
-
-
-# Cria uma instância da classe ProgramInstaller
-$programInstaller = [ProgramInstaller]::new()
-
 # Cria uma janela (main)
 $Form = New-Object System.Windows.Forms.Form
-$Form.Text = "Programa PowerShell"
+$Form.Text = "Informatica SPB"
 $Form.Size = New-Object System.Drawing.Size(300, 230)
-
-# Cria uma instância da classe Menu
-$menu = [Menu]::new()
+$form.FormBorderStyle = "Sizable"
 
 # Chama o método Show() passando a janela principal como parâmetro
 $menu.Show($form)
@@ -63,9 +60,6 @@ $ButtonInstall.Text = "Instalar Arquivos"
 $Form.Controls.Add($ButtonCopy)
 $Form.Controls.Add($ButtonInstall)
 
-
-
-
 # Cria uma barra de progresso (loading)
 $ProgressBar = New-Object System.Windows.Forms.ProgressBar
 $ProgressBar.Location = New-Object System.Drawing.Point(50, 100)
@@ -73,25 +67,16 @@ $ProgressBar.Size = New-Object System.Drawing.Size(200, 30)
 $ProgressBar.Style = 'Continuous'
 $ProgressBar.Visible = $false
 
-# Adiciona a barra de progresso à janela
-$Form.Controls.Add($ProgressBar)
-
-
 # Cria uma ação para o botão Copiar Arquivos
 $ButtonCopy.Add_Click({
-        # Coloque aqui o código para copiar os arquivos
 
-        # Verifica se a pasta de destino existe, caso contrário, cria-a
-        Write-Host "Verificando diretorios..."
-
+        # Verificando se existe o local/diretorio, se não tiver vai ser criado.
         if (-not (Test-Path -Path "C:\temp\formatacao")) {
             New-Item -ItemType Directory -Path "C:\temp\formatacao" | Out-Null
             Write-Host "Pasta C:\temp\formatacao criada"
             $log.WriteLog("Pasta C:\temp\formatacao criada")
         }
 
-        Write-Host "Copiando arquivos..."
-    
         # Obtém a lista de arquivos na origem
         $files = Get-ChildItem -Path $origem -Recurse
 
@@ -146,8 +131,6 @@ $ButtonInstall.Add_Click({
 
         # Adiciona ação para o botão browser
         $Button1.Add_Click({
-                # Coloque aqui o código para a ação do botão 1
-                Write-Host "Browser"
 
                 # Define o caminho do instalador do programa
                 $installerPath = "C:\TEMP\formatacao\arquivos\ChromeStandaloneSetup64.exe"
@@ -157,7 +140,6 @@ $ButtonInstall.Add_Click({
 
                 #log
                 $log.WriteLog("Instalação do $installerPath cancelada e/ou finalizada com sucesso.")
-
             })
 
         # Cria o Botão Compactador
@@ -168,9 +150,6 @@ $ButtonInstall.Add_Click({
 
         # Adiciona ação para o Botão Compactador
         $Button2.Add_Click({
-                # Coloque aqui o código para a ação do botão 2
-                Write-Host "Compactador"
-
                 # Define o caminho do instalador do programa
                 $installerPath = "C:\TEMP\formatacao\arquivos\7z2201-x64.exe"
 
@@ -191,8 +170,6 @@ $ButtonInstall.Add_Click({
 
         # Adiciona ação para o botão libreOffice
         $Button3.Add_Click({
-                # Coloque aqui o código para a ação do botão 3
-                Write-Host "LibreOffice"
 
                 # Define o caminho do instalador do programa
                 $installerPath = "C:\TEMP\formatacao\arquivos\LibreOffice_7.4.2_Win_x64.msi"
@@ -213,8 +190,6 @@ $ButtonInstall.Add_Click({
 
         # Adiciona ação para o botão bde
         $Button4.Add_Click({
-                # Coloque aqui o código para a ação do botão 3
-                Write-Host "BDE"
 
                 # Define o caminho do instalador do programa
                 $installerPath = "C:\TEMP\formatacao\arquivos\VECTOR\bde_vector_64.exe"
@@ -225,7 +200,7 @@ $ButtonInstall.Add_Click({
 
                 if ((Test-Path -Path "C:\Program Files (x86)\Common Files\Borland Shared\BDE")) {
 
-                    # Define o caminho de origem e destino do arquivo
+                    # Define o caminho de origem e destino dos arquivos de config
                     $origemBDE_idapi32 = "C:\TEMP\formatacao\arquivos\VECTOR\idapi32.cfg"
                     $origemBDE_sqlora8 = "C:\TEMP\formatacao\arquivos\VECTOR\sqlora8.dll"
                     $destinoBDE = "C:\Program Files (x86)\Common Files\Borland Shared\BDE\"
@@ -244,12 +219,7 @@ $ButtonInstall.Add_Click({
         $InstallWindow.Controls.Add($Button3)
         $InstallWindow.Controls.Add($Button4)
 
-        # Mostra a janela
         $InstallWindow.ShowDialog()
     })
 
-
-
-
-# Mostra a janela
 $Form.ShowDialog()
