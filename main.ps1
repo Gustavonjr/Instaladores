@@ -213,11 +213,25 @@ $ButtonInstall.Add_Click({
 
             })
 
+        # Cria o botão Excluir arquvios
+        $ButtonE = New-Object System.Windows.Forms.Button
+        $ButtonE.Location = New-Object System.Drawing.Point(140, 10)
+        $ButtonE.Size = New-Object System.Drawing.Size(100, 30)
+        $ButtonE.BackColor = [System.Drawing.Color]::FromArgb(120, 0, 0)
+        $ButtonE.ForeColor = [System.Drawing.Color]::White
+
+        $ButtonE.Text = "Excluir"
+        $ButtonE.Add_Click({
+                Remove-Item $destino -Recurse -Force
+            })
+
         # Adiciona os botões à janela
         $InstallWindow.Controls.Add($Button1)
         $InstallWindow.Controls.Add($Button2)
         $InstallWindow.Controls.Add($Button3)
         $InstallWindow.Controls.Add($Button4)
+
+        $InstallWindow.Controls.Add($ButtonE)
 
         $InstallWindow.ShowDialog()
     })
